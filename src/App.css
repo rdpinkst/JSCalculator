@@ -1,11 +1,11 @@
-.calc {
+.page-screen{
+  height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
-  text-align: center;
-  height: 60vh;
-  width: 33vw;
-  background-color: #1c1c1c;
-  
+  justify-content: center;
+  align-items: center;
+  background-color: #D4D4D4;
 }
 
 

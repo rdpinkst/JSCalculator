@@ -1,13 +1,11 @@
-import CalcPad from './components/CalcPad';
-import Screen from './components/Screen';
+import Calculator from "./components/Calculator"
 import './App.css';
 
 
 function App() {
   return (
-    <div className="calc">
-      <Screen />
-      <CalcPad />
+    <div className="page-screen">
+      <Calculator />
     </div>
   );
 }

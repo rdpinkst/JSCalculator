@@ -1,10 +1,10 @@
 import React from "react"
 import "../style/screen.css"
 
-function Screen(){
+function Screen({screenInput}){
     return (
         <div className="screen">
-            <p className="input-value">Imput</p>
+            <p className="input-value">{screenInput}</p>
         </div>
     )
 }
