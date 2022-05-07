@@ -1,0 +1,14 @@
+.screen{
+    height: 25%;
+    color: white;
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-content: flex-end;
+    margin-right: 1.5rem;
+}
+
+.input-value{
+    font-size: 4rem;
+    
+}
