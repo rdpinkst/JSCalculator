@@ -5,8 +5,6 @@ import "../style/calculator.css";
 
 function Calculator() {
   const [screenInput, setScreenInput] = useState("0");
-  const [otherNumb, setOtherNumb] = useState("");
-  const [operator, setOperator] = useState("");
 
   return (
     <div className="calc">
@@ -14,10 +12,6 @@ function Calculator() {
       <CalcPad
         input = {screenInput}
         setInput={setScreenInput}
-        otherNumb={otherNumb}
-        setNumber={setOtherNumb}
-        operator = {operator}
-        setOperator = {setOperator}
       />
     </div>
   );

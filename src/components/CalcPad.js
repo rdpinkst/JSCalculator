@@ -1,14 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../style/calcPad.css";
 
-function CalcPad({
-  input,
-  setInput,
-  otherNumber,
-  setNumber,
-  operator,
-  setOperator,
-}) {
+function CalcPad({ input, setInput }) {
+  const [otherNumb, setOtherNumb] = useState("");
+  const [operator, setOperator] = useState("");
+  const [nextOperator, setNextOperator] = useState("");
+  const [evaluate, setEvaluate] = useState(false);
+
   const keyValues = [
     "AC",
     "+/-",
@@ -47,6 +45,21 @@ function CalcPad({
     return a / b;
   }
 
+  function computeNumb(a, b, sign) {
+    switch (sign) {
+      case "+":
+        return add(a, b);
+      case "-":
+        return subtract(a, b);
+      case "x":
+        return multiply(a, b);
+      case "/":
+        return divide(a, b);
+      default:
+        console.log("Don't know how to compute.");
+    }
+  }
+
   function clickButton(e) {
     const valueBtn = e.target.textContent;
     const checkNumber = parseInt(valueBtn);
@@ -54,9 +67,7 @@ function CalcPad({
       setInput((prevState) => {
         if (prevState === "0" && !operator) {
           return e.target.textContent;
-        } else if (operator) {
-          let numb = prevState;
-          setNumber(numb);
+        } else if (operator && !evaluate) {
           return e.target.textContent;
         } else {
           return prevState + e.target.textContent;
@@ -64,6 +75,10 @@ function CalcPad({
       });
     } else if (valueBtn === "AC") {
       setInput("0");
+      setOtherNumb("");
+      setOperator("");
+      setNextOperator("");
+      setEvaluate(false);
     } else if (valueBtn === "+/-") {
       setInput((prevState) => {
         if (prevState.includes("-")) {
@@ -81,15 +96,40 @@ function CalcPad({
     } else if (valueBtn === ".") {
       setInput((prevState) => {
         if (prevState.includes(".")) {
-          return prevState;
+          return prevState + e.target.textContent;
         } else {
           return prevState + ".";
         }
       });
-    } else {
+    } else if (operator && !evaluate) {
+      setEvaluate((prevState) => !prevState);
+      setNextOperator(e.target.textContent);
+    } else if(!operator && valueBtn === "="){
+      setOperator("");
+    }
+    else {
       setOperator(e.target.textContent);
     }
   }
+
+  useEffect(() => {
+    if (evaluate) {
+      const numbValA = parseFloat(otherNumb);
+      const numbValB = parseFloat(input);
+      setInput(`${computeNumb(numbValA, numbValB, operator)}`);
+      setEvaluate((prevState) => !prevState);
+      setOperator(prevState => {
+        if(nextOperator === "="){
+          prevState = "";
+          return prevState;
+        }else {
+          return nextOperator
+        }
+        });
+    } else if (!evaluate && operator) {
+      setOtherNumb(input);
+    }
+  }, [evaluate, operator]);
 
   const pad = keyValues.map((val) => {
     return (
