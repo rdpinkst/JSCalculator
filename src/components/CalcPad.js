@@ -6,6 +6,7 @@ function CalcPad({ input, setInput }) {
   const [operator, setOperator] = useState("");
   const [nextOperator, setNextOperator] = useState("");
   const [evaluate, setEvaluate] = useState(false);
+  const [newNumb, setNewNumb] = useState(false);
 
   const keyValues = [
     "AC",
@@ -62,23 +63,28 @@ function CalcPad({ input, setInput }) {
 
   function clickButton(e) {
     const valueBtn = e.target.textContent;
-    const checkNumber = parseInt(valueBtn);
-    if (checkNumber) {
+    const checkNumber = parseFloat(valueBtn);
+
+    if (checkNumber >= 0) {
       setInput((prevState) => {
         if (prevState === "0" && !operator) {
           return e.target.textContent;
-        } else if (operator && !evaluate) {
+        } else if (newNumb) {
           return e.target.textContent;
         } else {
           return prevState + e.target.textContent;
         }
       });
+      if (newNumb) {
+        setNewNumb((prevState) => !prevState);
+      }
     } else if (valueBtn === "AC") {
       setInput("0");
       setOtherNumb("");
       setOperator("");
       setNextOperator("");
       setEvaluate(false);
+      setNewNumb(false);
     } else if (valueBtn === "+/-") {
       setInput((prevState) => {
         if (prevState.includes("-")) {
@@ -96,19 +102,20 @@ function CalcPad({ input, setInput }) {
     } else if (valueBtn === ".") {
       setInput((prevState) => {
         if (prevState.includes(".")) {
-          return prevState + e.target.textContent;
+          return prevState;
         } else {
           return prevState + ".";
         }
       });
     } else if (operator && !evaluate) {
+      setNewNumb((prevState) => !prevState);
       setEvaluate((prevState) => !prevState);
       setNextOperator(e.target.textContent);
-    } else if(!operator && valueBtn === "="){
+    } else if (!operator && valueBtn === "=") {
       setOperator("");
-    }
-    else {
+    } else {
       setOperator(e.target.textContent);
+      setNewNumb((prevState) => !prevState);
     }
   }
 
@@ -118,14 +125,17 @@ function CalcPad({ input, setInput }) {
       const numbValB = parseFloat(input);
       setInput(`${computeNumb(numbValA, numbValB, operator)}`);
       setEvaluate((prevState) => !prevState);
-      setOperator(prevState => {
-        if(nextOperator === "="){
+      setOperator((prevState) => {
+        if (nextOperator === "=") {
           prevState = "";
           return prevState;
-        }else {
-          return nextOperator
+        } else {
+          return nextOperator;
         }
-        });
+      });
+      if (nextOperator === "=") {
+        setNewNumb((prevState) => !prevState);
+      }
     } else if (!evaluate && operator) {
       setOtherNumb(input);
     }
@@ -133,7 +143,11 @@ function CalcPad({ input, setInput }) {
 
   const pad = keyValues.map((val) => {
     return (
-      <button className={`val-${val} button`} key={val} onClick={clickButton}>
+      <button
+        className={`val-${val} button`}
+        key={val}
+        onClick={(e) => clickButton(e)}
+      >
         {val}
       </button>
     );
