@@ -113,6 +113,7 @@ function CalcPad({ input, setInput }) {
       setNextOperator(e.target.textContent);
     } else if (!operator && valueBtn === "=") {
       setOperator("");
+      setNewNumb(prevState => !prevState)
     } else {
       setOperator(e.target.textContent);
       setNewNumb((prevState) => !prevState);
